@@ -147,6 +147,8 @@ app.post("/authorized_post_request", authMiddleWare, (req, res) => {
     }
   });
 });
+const artworksRouter = require("./routers/artworks");
+app.use("/artworks", artworksRouter);
 
 const authRouter = require("./routers/auth");
 app.use("/", authRouter);
