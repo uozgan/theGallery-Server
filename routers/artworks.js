@@ -50,4 +50,27 @@ router.patch("/:id", async (req, res) => {
   return res.status(200).send({ artwork });
 });
 
+router.post("/:id/bids", auth, async (req, res) => {
+  const artwork = await Artwork.findByPk(req.params.id);
+  console.log("Artz", artwork);
+
+  if (artwork === null) {
+    return res.status(404).send({ message: "This artwork does not exist" });
+  }
+
+  const { amount, email, artworkId } = req.body;
+
+  if (!amount) {
+    return res.status(400).send({ message: "Enter a valid amount" });
+  }
+
+  const bid = await Bid.create({
+    email,
+    amount,
+    artworkId
+  });
+
+  return res.status(201).send({ message: "New bid created", bid });
+});
+
 module.exports = router;
