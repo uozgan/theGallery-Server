@@ -36,4 +36,18 @@ router.get("/:id", async (req, res) => {
   res.status(200).send({ message: "ok", artwork });
 });
 
+router.patch("/:id", async (req, res) => {
+  const artwork = await Artwork.findByPk(req.params.id);
+
+  //console.log("Artwork-Database", artwork);
+
+  const { hearts } = req.body;
+
+  //console.log("Req Body", req.body.hearts);
+
+  await artwork.update({ hearts });
+
+  return res.status(200).send({ artwork });
+});
+
 module.exports = router;
