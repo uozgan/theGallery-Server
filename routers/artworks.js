@@ -13,6 +13,8 @@ router.get("/", async (req, res) => {
     offset,
     include: [Bid]
   });
+  console.log("artworks", artworks);
+
   res.status(200).send({ message: "ok", artworks });
 });
 
@@ -88,12 +90,17 @@ router.post("/auction", auth, async (req, res) => {
     return res.status(400).send({ message: "User not found" });
   }
 
-  const artwork = await Artwork.create({
-    title,
-    minimumBid,
-    imageUrl,
-    userId
-  });
+  const artwork = await Artwork.create(
+    {
+      title,
+      minimumBid,
+      imageUrl,
+      userId
+    },
+    { include: [Bid] }
+  );
+
+  console.log("Artwork db", artwork);
 
   return res
     .status(201)
