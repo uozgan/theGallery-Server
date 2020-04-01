@@ -44,12 +44,14 @@ module.exports = {
       User.upsert({
         name: "testuser",
         email: "test@test.com",
-        password: bcrypt.hashSync("test1234", SALT_ROUNDS)
+        password: bcrypt.hashSync("test1234", SALT_ROUNDS),
+        isArtist: true
       }),
       User.upsert({
         name: "dummy",
         email: "dummy@dummy.com",
-        password: bcrypt.hashSync("dummy1234", SALT_ROUNDS)
+        password: bcrypt.hashSync("dummy1234", SALT_ROUNDS),
+        isArtist: false
       })
     ]);
 

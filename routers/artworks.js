@@ -84,6 +84,10 @@ router.post("/auction", auth, async (req, res) => {
     return res.status(400).send({ message: "An artwork must have a title" });
   }
 
+  if (!userId) {
+    return res.status(400).send({ message: "User not found" });
+  }
+
   const artwork = await Artwork.create({
     title,
     minimumBid,
