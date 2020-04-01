@@ -15,6 +15,10 @@ module.exports = (sequelize, DataTypes) => {
       password: {
         type: DataTypes.STRING,
         allowNull: false
+      },
+      isArtist: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
       }
     },
     {}
