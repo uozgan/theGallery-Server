@@ -4,6 +4,7 @@ const { toJWT } = require("../auth/jwt");
 const authMiddleware = require("../auth/middleware");
 const User = require("../models/").user;
 const { SALT_ROUNDS } = require("../config/constants");
+const Artwork = require("../models").artwork;
 
 const router = new Router();
 
@@ -17,7 +18,13 @@ router.post("/login", async (req, res, next) => {
         .send({ message: "Please provide both email and password" });
     }
 
-    const user = await User.findOne({ where: { email } });
+    const user = await User.findOne({
+      where: { email },
+
+      include: {
+        model: Artwork
+      }
+    });
 
     if (!user || !bcrypt.compareSync(password, user.password)) {
       return res.status(400).send({

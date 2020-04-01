@@ -51,8 +51,8 @@ router.patch("/:id", async (req, res) => {
 });
 
 router.post("/:id/bids", auth, async (req, res) => {
-  const artwork = await Artwork.findByPk(req.params.id);
-  console.log("Artz", artwork);
+  const artwork = await Artwork.findByPk(req.params.id, { include: [Bid] });
+  console.log("Artwork bids", artwork.bids);
 
   if (artwork === null) {
     return res.status(404).send({ message: "This artwork does not exist" });
@@ -60,8 +60,12 @@ router.post("/:id/bids", auth, async (req, res) => {
 
   const { amount, email, artworkId } = req.body;
 
-  if (!amount) {
-    return res.status(400).send({ message: "Enter a valid amount" });
+  const highestAmount = Math.max(...artwork.bids.map(bid => bid.amount));
+
+  console.log("Highest Amount", highestAmount);
+
+  if (amount <= highestAmount) {
+    return res.status(400).send({ message: "Please enter a higher amount!" });
   }
 
   const bid = await Bid.create({
@@ -71,6 +75,25 @@ router.post("/:id/bids", auth, async (req, res) => {
   });
 
   return res.status(201).send({ message: "New bid created", bid });
+});
+
+router.post("/auction", auth, async (req, res) => {
+  const { title, minimumBid, imageUrl, userId } = req.body;
+
+  if (!title) {
+    return res.status(400).send({ message: "An artwork must have a title" });
+  }
+
+  const artwork = await Artwork.create({
+    title,
+    minimumBid,
+    imageUrl,
+    userId
+  });
+
+  return res
+    .status(201)
+    .send({ message: "Artwork successfully created", artwork });
 });
 
 module.exports = router;
